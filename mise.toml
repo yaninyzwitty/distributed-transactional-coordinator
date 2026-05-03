@@ -1,0 +1,30 @@
+[tools]
+go = "1.26.2"
+sqlc = "1.31.0"
+
+# Just command runner for recipes
+just = "1.50.0"
+buf = "1.69.0"
+
+
+# Linting tools
+golangci-lint = "2.12.1"
+# Enhanced test output for Go
+gotestsum = "1.13.0"
+
+# Mocking tools
+# Official Go mocking framework (mockgen)
+"go:go.uber.org/mock/mockgen" = "0.6.0"
+
+[tool_alias]
+# Alias for just tool
+just = "github:casey/just"
+# Alias for gotestsum tool
+gotestsum = "github:gotestyourself/gotestsum[version_prefix=v]"
+# Alias for buf tool
+buf = "github:bufbuild/buf[version_prefix=v]"
+
+
+[settings]
+# Enable experimental features in mise
+experimental = true
