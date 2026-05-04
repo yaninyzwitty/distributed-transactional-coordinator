@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package transaction.v1;
+
+import "transaction/v1/transaction.proto";
+
+service TransactionService {
+  rpc CreateTransaction(CreateTransactionRequest) returns (CreateTransactionResponse);
+  rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse);
+  rpc UpdateTransactionState(UpdateTransactionStateRequest) returns (UpdateTransactionStateResponse);
+  rpc GetExpiredTransactions(GetExpiredTransactionsRequest) returns (GetExpiredTransactionsResponse);
+}
