@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package participant.v1;
+
+import "participant/v1/participant.proto";
+
+service ParticipantService {
+  rpc RegisterParticipant(RegisterParticipantRequest) returns (RegisterParticipantResponse);
+  rpc GetParticipants(GetParticipantsRequest) returns (GetParticipantsResponse);
+  rpc UpdateParticipantState(UpdateParticipantStateRequest) returns (UpdateParticipantStateResponse);
+}

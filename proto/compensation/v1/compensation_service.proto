@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package compensation.v1;
+
+import "compensation/v1/compensation.proto";
+
+service CompensationService {
+  rpc RecordCompensationEvent(RecordCompensationEventRequest) returns (RecordCompensationEventResponse);
+  rpc GetCompensationEvents(GetCompensationEventsRequest) returns (GetCompensationEventsResponse);
+}
