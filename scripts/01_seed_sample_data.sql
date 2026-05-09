@@ -1,0 +1,2 @@
+-- Placeholder seed file for sample data
+-- Add INSERT statements here for testing
