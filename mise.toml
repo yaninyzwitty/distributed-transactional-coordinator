@@ -5,6 +5,7 @@ sqlc = "1.31.0"
 # Just command runner for recipes
 just = "1.50.0"
 buf = "1.69.0"
+doppler = "3.76.0"
 
 
 # Linting tools
@@ -27,6 +28,8 @@ just = "github:casey/just"
 gotestsum = "github:gotestyourself/gotestsum[version_prefix=v]"
 # Alias for buf tool
 buf = "github:bufbuild/buf[version_prefix=v]"
+# Alias for doppler tool
+doppler = "github:dopplerhq/cli[version_prefix=v]"
 
 
 [settings]
