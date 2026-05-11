@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package recovery.v1;
+
+
+import "coordinator/v1/coordinator.proto";
+import "participant/v1/participant.proto";
+
+option go_package = "recovery/v1";
+
+message GetRecoverableTransactionsRequest {
+  int32 limit = 1;
+}
+
+message GetRecoverableTransactionsResponse {
+  repeated .coordinator.v1.DistributedTransaction transactions = 1;
+}
+
+message GetTransactionParticipantsRequest {
+  string transaction_id = 1;
+}
+
+message GetTransactionParticipantsResponse {
+  repeated .participant.v1.TransactionParticipant participants = 1;
+}
+
+message GetStalledPreparedTransactionsRequest {}
+
+message GetStalledPreparedTransactionsResponse {
+  repeated .coordinator.v1.DistributedTransaction transactions = 1;
+}
+
+message IncrementRecoveryAttemptsRequest {
+  string transaction_id = 1;
+}
+
+message IncrementRecoveryAttemptsResponse {}
+
+service RecoveryService {
+  rpc GetRecoverableTransactions(GetRecoverableTransactionsRequest) returns (GetRecoverableTransactionsResponse);
+  rpc GetTransactionParticipants(GetTransactionParticipantsRequest) returns (GetTransactionParticipantsResponse);
+  rpc GetStalledPreparedTransactions(GetStalledPreparedTransactionsRequest) returns (GetStalledPreparedTransactionsResponse);
+  rpc IncrementRecoveryAttempts(IncrementRecoveryAttemptsRequest) returns (IncrementRecoveryAttemptsResponse);
+}

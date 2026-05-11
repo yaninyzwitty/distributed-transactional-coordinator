@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package recovery.v1;
+
+import "coordinator/v1/coordinator.proto";
+
+option go_package = "recovery/v1";
+
+message AcquireRecoveryLeaseRequest {
+  string transaction_id = 1;
+  string coordinator_instance_id = 2;
+}
+
+message AcquireRecoveryLeaseResponse {
+  .coordinator.v1.DistributedTransaction transaction = 1;
+}
+
+message RenewRecoveryLeaseRequest {
+  string transaction_id = 1;
+  string coordinator_instance_id = 2;
+}
+
+message RenewRecoveryLeaseResponse {}
+
+service LeaseService {
+  rpc AcquireRecoveryLease(AcquireRecoveryLeaseRequest) returns (AcquireRecoveryLeaseResponse);
+  rpc RenewRecoveryLease(RenewRecoveryLeaseRequest) returns (RenewRecoveryLeaseResponse);
+}

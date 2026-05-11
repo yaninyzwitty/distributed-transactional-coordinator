@@ -1,13 +1,11 @@
-DATABASE_URL := `doppler secrets get DATABASE_URL --no-file`
+set shell := ["pwsh", "-Command"]
 
-# Show help (list available recipes)
+export DOPPLER_TOKEN := env_var_or_default("DOPPLER_TOKEN", "")
 default:
     @just --list
 
-# Delegate to gen.just recipes
 gen *args:
-    @just --justfile just/gen.just {{args}}
+    $env:DATABASE_URL = $(doppler secrets get DATABASE_URL --plain); just --justfile just/gen.just {{args}}
 
-# Delegate to db.just recipes
 db *args:
-    @just --justfile just/db.just {{args}}
+    $env:DATABASE_URL = $(doppler secrets get DATABASE_URL --plain); just --justfile just/db.just {{args}}

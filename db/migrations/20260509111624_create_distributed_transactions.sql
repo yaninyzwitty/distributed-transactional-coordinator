@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS distributed_transactions (
     recovery_needed BOOLEAN NOT NULL DEFAULT FALSE,
     recovery_attempts INT NOT NULL DEFAULT 0,
     last_recovery_at TIMESTAMPTZ,
+    coordinator_instance_id TEXT,
+    lease_expires_at TIMESTAMPTZ,
 
     -- timing
     prepare_deadline TIMESTAMPTZ,
