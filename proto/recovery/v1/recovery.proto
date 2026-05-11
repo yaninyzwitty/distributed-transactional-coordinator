@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package coordinator.recovery.v1;
+package recovery.v1;
 
-import "google/protobuf/timestamp.proto";
+
 import "coordinator/v1/coordinator.proto";
 import "participant/v1/participant.proto";
 
@@ -13,7 +13,7 @@ message GetRecoverableTransactionsRequest {
 }
 
 message GetRecoverableTransactionsResponse {
-  repeated .coordinator.coordinator.v1.DistributedTransaction transactions = 1;
+  repeated .coordinator.v1.DistributedTransaction transactions = 1;
 }
 
 message GetTransactionParticipantsRequest {
@@ -21,13 +21,13 @@ message GetTransactionParticipantsRequest {
 }
 
 message GetTransactionParticipantsResponse {
-  repeated .coordinator.participant.v1.TransactionParticipant participants = 1;
+  repeated .participant.v1.TransactionParticipant participants = 1;
 }
 
 message GetStalledPreparedTransactionsRequest {}
 
 message GetStalledPreparedTransactionsResponse {
-  repeated .coordinator.coordinator.v1.DistributedTransaction transactions = 1;
+  repeated .coordinator.v1.DistributedTransaction transactions = 1;
 }
 
 message IncrementRecoveryAttemptsRequest {

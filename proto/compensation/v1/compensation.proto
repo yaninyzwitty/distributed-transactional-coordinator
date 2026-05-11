@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package coordinator.compensation.v1;
+package compensation.v1;
 
 import "google/protobuf/timestamp.proto";
 
@@ -8,10 +8,10 @@ option go_package = "compensation/v1";
 
 enum CompensationStatus {
   COMPENSATION_STATUS_UNSPECIFIED = 0;
-  PENDING = 1;
-  RUNNING = 2;
-  COMPLETED = 3;
-  FAILED = 4;
+  COMPENSATION_STATUS_PENDING = 1;
+  COMPENSATION_STATUS_RUNNING = 2;
+  COMPENSATION_STATUS_COMPLETED = 3;
+  COMPENSATION_STATUS_FAILED = 4;
 }
 
 message CompensationLog {

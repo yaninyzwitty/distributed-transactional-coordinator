@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package coordinator.coordinator.v1;
+package coordinator.v1;
 
 import "google/protobuf/timestamp.proto";
 
@@ -8,15 +8,15 @@ option go_package = "coordinator/v1";
 
 enum TxState {
   TX_STATE_UNSPECIFIED = 0;
-  INITIATED = 1;
-  PREPARING = 2;
-  PREPARED = 3;
-  COMMITTING = 4;
-  COMMITTED = 5;
-  ABORTING = 6;
-  ABORTED = 7;
-  RECOVERING = 8;
-  FAILED = 9;
+  TX_STATE_INITIATED = 1;
+  TX_STATE_PREPARING = 2;
+  TX_STATE_PREPARED = 3;
+  TX_STATE_COMMITTING = 4;
+  TX_STATE_COMMITTED = 5;
+  TX_STATE_ABORTING = 6;
+  TX_STATE_ABORTED = 7;
+  TX_STATE_RECOVERING = 8;
+  TX_STATE_FAILED = 9;
 }
 
 message DistributedTransaction {

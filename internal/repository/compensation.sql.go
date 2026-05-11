@@ -79,7 +79,7 @@ SET
     status = 'completed',
     response_payload = $2,
     executed_at = now()
-WHERE id = $1
+WHERE id = $1 AND status = 'running'
 `
 
 type CompleteCompensationParams struct {
@@ -98,7 +98,7 @@ SET
     status = 'failed',
     error_message = $2,
     retry_count = retry_count + 1
-WHERE id = $1
+WHERE id = $1 AND status = 'running'
 `
 
 type FailCompensationParams struct {
@@ -112,11 +112,16 @@ func (q *Queries) FailCompensation(ctx context.Context, arg FailCompensationPara
 }
 
 const getPendingCompensations = `-- name: GetPendingCompensations :many
-SELECT id, transaction_id, participant_id, sequence_no, action_type, compensation_endpoint, request_payload, response_payload, status, error_message, retry_count, executed_at, created_at, updated_at, deleted_at
-FROM compensation_logs
-WHERE status IN ('pending', 'failed')
-ORDER BY sequence_no DESC
-LIMIT $1
+UPDATE compensation_logs
+SET status = 'running'
+WHERE id IN (
+    SELECT id
+    FROM compensation_logs
+    WHERE status IN ('pending', 'failed')
+    ORDER BY sequence_no DESC
+    LIMIT $1
+)
+RETURNING id, transaction_id, participant_id, sequence_no, action_type, compensation_endpoint, request_payload, response_payload, status, error_message, retry_count, executed_at, created_at, updated_at, deleted_at
 `
 
 func (q *Queries) GetPendingCompensations(ctx context.Context, limit int32) ([]CompensationLog, error) {
@@ -158,7 +163,7 @@ func (q *Queries) GetPendingCompensations(ctx context.Context, limit int32) ([]C
 const markCompensationRunning = `-- name: MarkCompensationRunning :exec
 UPDATE compensation_logs
 SET status = 'running'
-WHERE id = $1
+WHERE id = $1 AND status = 'pending'
 `
 
 func (q *Queries) MarkCompensationRunning(ctx context.Context, id uuid.UUID) error {
