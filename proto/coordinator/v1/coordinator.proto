@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package coordinator.coordinator.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "coordinator/v1";
+
+enum TxState {
+  TX_STATE_UNSPECIFIED = 0;
+  INITIATED = 1;
+  PREPARING = 2;
+  PREPARED = 3;
+  COMMITTING = 4;
+  COMMITTED = 5;
+  ABORTING = 6;
+  ABORTED = 7;
+  RECOVERING = 8;
+  FAILED = 9;
+}
+
+message DistributedTransaction {
+  string id = 1;
+  optional string correlation_id = 2;
+  optional string idempotency_key = 3;
+  TxState state = 4;
+  bool recovery_needed = 5;
+  int32 recovery_attempts = 6;
+  optional google.protobuf.Timestamp last_recovery_at = 7;
+  optional string coordinator_instance_id = 8;
+  optional google.protobuf.Timestamp lease_expires_at = 9;
+  optional google.protobuf.Timestamp prepare_deadline = 10;
+  optional google.protobuf.Timestamp commit_deadline = 11;
+  int64 version = 12;
+  bytes metadata = 13;
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+  optional google.protobuf.Timestamp completed_at = 16;
+  optional google.protobuf.Timestamp deleted_at = 17;
+}
+
+message CreateTransactionRequest {
+  string id = 1;
+  optional string correlation_id = 2;
+  optional string idempotency_key = 3;
+  bytes metadata = 4;
+}
+
+message CreateTransactionResponse {
+  DistributedTransaction transaction = 1;
+}
+
+message TransitionTransactionStateRequest {
+  string transaction_id = 1;
+  TxState new_state = 2;
+  int64 version = 3;
+}
+
+message TransitionTransactionStateResponse {
+  DistributedTransaction transaction = 1;
+}
+
+message GetTransactionRequest {
+  string transaction_id = 1;
+}
+
+message GetTransactionResponse {
+  DistributedTransaction transaction = 1;
+}
+
+message CompleteTransactionRequest {
+  string transaction_id = 1;
+}
+
+message CompleteTransactionResponse {}
+
+service CoordinatorService {
+  rpc CreateTransaction(CreateTransactionRequest) returns (CreateTransactionResponse);
+  rpc TransitionTransactionState(TransitionTransactionStateRequest) returns (TransitionTransactionStateResponse);
+  rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse);
+  rpc CompleteTransaction(CompleteTransactionRequest) returns (CompleteTransactionResponse);
+}

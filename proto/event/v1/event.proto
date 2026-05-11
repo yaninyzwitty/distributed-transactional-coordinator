@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package coordinator.event.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "event/v1";
+
+message TransactionEvent {
+  int64 id = 1;
+  string transaction_id = 2;
+  optional string participant_id = 3;
+  string event_type = 4;
+  bytes event_data = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+message AppendTransactionEventRequest {
+  string transaction_id = 1;
+  optional string participant_id = 2;
+  string event_type = 3;
+  bytes event_data = 4;
+}
+
+message AppendTransactionEventResponse {}
+
+message GetTransactionTimelineRequest {
+  string transaction_id = 1;
+}
+
+message GetTransactionTimelineResponse {
+  repeated TransactionEvent events = 1;
+}
+
+service EventService {
+  rpc AppendTransactionEvent(AppendTransactionEventRequest) returns (AppendTransactionEventResponse);
+  rpc GetTransactionTimeline(GetTransactionTimelineRequest) returns (GetTransactionTimelineResponse);
+}

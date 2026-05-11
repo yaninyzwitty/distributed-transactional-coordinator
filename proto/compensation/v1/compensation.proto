@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package coordinator.compensation.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "compensation/v1";
+
+enum CompensationStatus {
+  COMPENSATION_STATUS_UNSPECIFIED = 0;
+  PENDING = 1;
+  RUNNING = 2;
+  COMPLETED = 3;
+  FAILED = 4;
+}
+
+message CompensationLog {
+  string id = 1;
+  string transaction_id = 2;
+  string participant_id = 3;
+  int64 sequence_no = 4;
+  string action_type = 5;
+  string compensation_endpoint = 6;
+  bytes request_payload = 7;
+  bytes response_payload = 8;
+  CompensationStatus status = 9;
+  optional string error_message = 10;
+  int32 retry_count = 11;
+  optional google.protobuf.Timestamp executed_at = 12;
+  google.protobuf.Timestamp created_at = 13;
+  google.protobuf.Timestamp updated_at = 14;
+  optional google.protobuf.Timestamp deleted_at = 15;
+}
+
+message AppendCompensationLogRequest {
+  string transaction_id = 1;
+  string participant_id = 2;
+  int64 sequence_no = 3;
+  string action_type = 4;
+  string compensation_endpoint = 5;
+  bytes request_payload = 6;
+}
+
+message AppendCompensationLogResponse {
+  CompensationLog compensation_log = 1;
+}
+
+message GetPendingCompensationsRequest {
+  int32 limit = 1;
+}
+
+message GetPendingCompensationsResponse {
+  repeated CompensationLog compensation_logs = 1;
+}
+
+message MarkCompensationRunningRequest {
+  string compensation_log_id = 1;
+}
+
+message MarkCompensationRunningResponse {}
+
+message CompleteCompensationRequest {
+  string compensation_log_id = 1;
+  bytes response_payload = 2;
+}
+
+message CompleteCompensationResponse {}
+
+message FailCompensationRequest {
+  string compensation_log_id = 1;
+  optional string error_message = 2;
+}
+
+message FailCompensationResponse {}
+
+service CompensationService {
+  rpc AppendCompensationLog(AppendCompensationLogRequest) returns (AppendCompensationLogResponse);
+  rpc GetPendingCompensations(GetPendingCompensationsRequest) returns (GetPendingCompensationsResponse);
+  rpc MarkCompensationRunning(MarkCompensationRunningRequest) returns (MarkCompensationRunningResponse);
+  rpc CompleteCompensation(CompleteCompensationRequest) returns (CompleteCompensationResponse);
+  rpc FailCompensation(FailCompensationRequest) returns (FailCompensationResponse);
+}

@@ -1,6 +1,6 @@
 -- +goose Up
 
-CREATE TYPE IF NOT EXISTS compensation_status AS ENUM (
+CREATE TYPE compensation_status AS ENUM (
     'pending',
     'running',
     'completed',

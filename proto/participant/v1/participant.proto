@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package coordinator.participant.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "participant/v1";
+
+enum ParticipantState {
+  PARTICIPANT_STATE_UNSPECIFIED = 0;
+  REGISTERED = 1;
+  PREPARE_SENT = 2;
+  PREPARED = 3;
+  PREPARE_FAILED = 4;
+  COMMIT_SENT = 5;
+  COMMITTED = 6;
+  ABORT_SENT = 7;
+  ABORTED = 8;
+  HEURISTIC_COMMIT = 9;
+  HEURISTIC_ABORT = 10;
+  TIMEOUT = 11;
+}
+
+message TransactionParticipant {
+  string id = 1;
+  string transaction_id = 2;
+  string participant_name = 3;
+  string service_name = 4;
+  string endpoint = 5;
+  ParticipantState state = 6;
+  optional string prepare_token = 7;
+  optional string commit_token = 8;
+  bytes prepare_response = 9;
+  bytes commit_response = 10;
+  bytes abort_response = 11;
+  optional string compensation_endpoint = 12;
+  bytes compensation_payload = 13;
+  int32 retry_count = 14;
+  optional google.protobuf.Timestamp last_retry_at = 15;
+  optional google.protobuf.Timestamp prepared_at = 16;
+  optional google.protobuf.Timestamp committed_at = 17;
+  optional google.protobuf.Timestamp aborted_at = 18;
+  google.protobuf.Timestamp created_at = 19;
+  google.protobuf.Timestamp updated_at = 20;
+  optional google.protobuf.Timestamp deleted_at = 21;
+}
+
+message RegisterParticipantRequest {
+  string id = 1;
+  string transaction_id = 2;
+  string participant_name = 3;
+  string service_name = 4;
+  string endpoint = 5;
+}
+
+message RegisterParticipantResponse {
+  TransactionParticipant participant = 1;
+}
+
+message MarkParticipantPreparedRequest {
+  string participant_id = 1;
+  optional string prepare_token = 2;
+}
+
+message MarkParticipantPreparedResponse {}
+
+message MarkParticipantCommittedRequest {
+  string participant_id = 1;
+}
+
+message MarkParticipantCommittedResponse {}
+
+message MarkParticipantAbortedRequest {
+  string participant_id = 1;
+}
+
+message MarkParticipantAbortedResponse {}
+
+message CountUnpreparedParticipantsRequest {
+  string transaction_id = 1;
+}
+
+message CountUnpreparedParticipantsResponse {
+  int64 count = 1;
+}
+
+service ParticipantService {
+  rpc RegisterParticipant(RegisterParticipantRequest) returns (RegisterParticipantResponse);
+  rpc MarkParticipantPrepared(MarkParticipantPreparedRequest) returns (MarkParticipantPreparedResponse);
+  rpc MarkParticipantCommitted(MarkParticipantCommittedRequest) returns (MarkParticipantCommittedResponse);
+  rpc MarkParticipantAborted(MarkParticipantAbortedRequest) returns (MarkParticipantAbortedResponse);
+  rpc CountUnpreparedParticipants(CountUnpreparedParticipantsRequest) returns (CountUnpreparedParticipantsResponse);
+}

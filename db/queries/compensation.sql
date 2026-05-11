@@ -1,5 +1,5 @@
 -- name: AppendCompensationLog :one
-INSERT INTO compensation_log (
+INSERT INTO compensation_logs (
     transaction_id,
     participant_id,
     sequence_no,
@@ -22,20 +22,20 @@ RETURNING *;
 
 -- name: GetPendingCompensations :many
 SELECT *
-FROM compensation_log
+FROM compensation_logs
 WHERE status IN ('pending', 'failed')
 ORDER BY sequence_no DESC
 LIMIT $1;
 
 
 -- name: MarkCompensationRunning :exec
-UPDATE compensation_log
+UPDATE compensation_logs
 SET status = 'running'
 WHERE id = $1;
 
 
 -- name: CompleteCompensation :exec
-UPDATE compensation_log
+UPDATE compensation_logs
 SET
     status = 'completed',
     response_payload = $2,
@@ -44,7 +44,7 @@ WHERE id = $1;
 
 
 -- name: FailCompensation :exec
-UPDATE compensation_log
+UPDATE compensation_logs
 SET
     status = 'failed',
     error_message = $2,
